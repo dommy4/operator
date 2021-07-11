@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native'
+import Account from './appComponets/Account';
 import Home from './appComponets/Home';
 import Login from './appComponets/Login';
 import Updater from './appComponets/Updater'

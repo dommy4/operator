@@ -46,7 +46,7 @@ export default class Updater extends React.Component {
         return (
             <View style={styles.parent}>
                 <View style={styles.picker}>
-                    <Text style={styles.saveText}>FROM:</Text>
+                    <Text style={styles.text}>FROM:</Text>
                     <Picker
                         selectedValue={this.state.from}
                         onValueChange={this.handleSelectFrom}
@@ -56,14 +56,13 @@ export default class Updater extends React.Component {
                     </Picker>
                 </View>
                 <View style={styles.picker}>
-                    <Text style={styles.saveText}>To:</Text>
+                    <Text style={styles.text}>To:</Text>
                     <Picker
-                        style={styles.input}
                         selectedValue={this.state.to}
                         onValueChange={this.handleSelectTo}
                         mode="dropdown">
                         <Picker.Item label="TOWN" value="TOWN" />
-                        <Picker.Item label="ESTATE" value="ESTATE"/>
+                        <Picker.Item label="ESTATE" value="ESTATE" />
                     </Picker>
                 </View>
                 <TextInput onChangeText={this.changeHandler('fare')} style={styles.input} keyboardType="numeric" placeholder="Fare amount" />
@@ -77,7 +76,7 @@ export default class Updater extends React.Component {
 const styles = StyleSheet.create({
     parent: {
         flex: 1,
-        paddingTop: 50,
+        paddingTop: 20,
         alignItems: "center",
         width: "100%"
     },
@@ -103,14 +102,19 @@ const styles = StyleSheet.create({
         width: "90%",
         padding: 10,
         alignItems: "center",
-        backgroundColor: "#0455bf",
+        backgroundColor: "#0866e0",
         marginTop: 20,
         borderRadius: 5
     },
     saveText: {
         fontSize: 20,
-        color:"white",
-        fontWeight:"bold"
+        color: "white",
+        fontWeight: "bold"
+    },
+    text: {
+        fontSize: 20,
+        padding: 10,
+        fontWeight: "bold"
     }
 
 })

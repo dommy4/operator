@@ -9,47 +9,75 @@ export default class Tripholder extends React.Component {
             from: this.props.from,
             to: this.props.to,
             fare: this.props.fare,
-            active: this.props.active
+            active: this.props.active,
+            showBanner: false
         }
         this.endTrip = this.endTrip.bind(this);
+        this.toggleBanner = this.toggleBanner.bind(this);
     }
     endTrip() {
         this.setState({ active: false })
     }
+    toggleBanner() {
+        (this.state.showBanner ?
+            this.setState({ showBanner: false })
+            :
+            this.setState({ showBanner: true })
+        )
+    }
     render() {
         const { id, from, to, fare } = this.state;
         return (
-            <View style={styles.bar}>
-                <View style={styles.textHolders}>
-                    <Text style={styles.text1}>TRIP</Text>
-                    <Text style={styles.text}>{id}</Text>
-                </View>
-                <View style={styles.textHolders}>
-                    <Text style={styles.text1}>FROM</Text>
-                    <Text style={styles.text}>{from}</Text>
-                </View>
-                <View style={styles.textHolders}>
-                    <Text style={styles.text1}>TO </Text>
-                    <Text style={styles.text}>{to}</Text>
-                </View>
-                <View style={styles.textHolders}>
-                    <Text style={styles.text1}>FARE </Text>
-                    <Text style={styles.text}>{fare}</Text>
-                </View>
-                <TouchableOpacity style={{
-                    width: "20%",
-                    backgroundColor: (this.state.active ? "#ff4c56" : "#e4f5ff"),
-                    alignItems: "center",
-                    padding: 2,
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    borderTopRightRadius: 5,
-                    borderBottomRightRadius: 5
-                }}
-                    onPress={this.endTrip}>
-                    <Text style={styles.text1}>{(this.state.active ? "END" : "ENDED")}</Text>
+            <>
+                <TouchableOpacity style={styles.bar} onPress={this.toggleBanner}>
+                    <View style={styles.textHolders}>
+                        <Text style={styles.text1}>TRIP</Text>
+                        <Text style={styles.text}>{id}</Text>
+                    </View>
+                    <View style={styles.textHolders}>
+                        <Text style={styles.text1}>FROM</Text>
+                        <Text style={styles.text}>{from}</Text>
+                    </View>
+                    <View style={styles.textHolders}>
+                        <Text style={styles.text1}>TO </Text>
+                        <Text style={styles.text}>{to}</Text>
+                    </View>
+                    <View style={styles.textHolders}>
+                        <Text style={styles.text1}>FARE </Text>
+                        <Text style={styles.text}>{fare}</Text>
+                    </View>
+                    <TouchableOpacity style={{
+                        width: "20%",
+                        backgroundColor: (this.state.active ? "#ff4c56" : "#e2fff0"),
+                        alignItems: "center",
+                        padding: 2,
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        borderTopRightRadius: 5,
+                        borderBottomRightRadius: 5
+                    }}
+                        onPress={this.endTrip}>
+                        <Text style={{
+                            color: (this.state.active ? "white" : "#7dcb8d"),
+                            fontWeight: "bold"
+                        }}>{(this.state.active ? "END" : "ENDED")}</Text>
+                    </TouchableOpacity>
                 </TouchableOpacity>
-            </View>
+                {(this.state.showBanner ?
+                    <View style={styles.dropContainer}>
+                        <View style={styles.textWrapper}>
+                            <Text style={styles.textBold}>CASH</Text>
+                            <Text style={styles.text}>20.00</Text>
+                        </View>
+                        <View style={styles.textWrapper}>
+                            <Text style={styles.textBold}>MPESA</Text>
+                            <Text style={styles.text}>13.00</Text>
+                        </View>
+                    </View>
+                    :
+                    null
+                )}
+            </>
         )
     }
 
@@ -73,17 +101,25 @@ const styles = StyleSheet.create({
         alignContent: "center",
         padding: 3
     },
-    // endButton: {
-    //     width: "20%",
-    //     backgroundColor:"#ff4c56",
-    //     alignItems: "center",
-    //     padding: 2,
-    //     flexDirection:"column",
-    //     justifyContent:"center",
-    //     borderTopRightRadius:5,
-    //     borderBottomRightRadius:5
-    // },
     text1: {
         fontWeight: "bold"
+    },
+    dropContainer: {
+        width: "95%",
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        backgroundColor: "#e4f5ff",
+        padding: 3
+    },
+    textWrapper: {
+        alignItems: "center"
+    },
+    textBold: {
+        fontWeight: "bold",
+        fontSize: 18
+    },
+    text: {
+        fontSize: 16,
+        
     }
 })
