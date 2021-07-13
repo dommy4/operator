@@ -24,7 +24,29 @@ export default class Home extends React.Component {
                 { id: 101, from: 'TOWN', to: 'ESTATE', fare: 80, active: false },
                 { id: 101, from: 'TOWN', to: 'ESTATE', fare: 80, active: false },
                 { id: 101, from: 'TOWN', to: 'ESTATE', fare: 20, active: false }
+            ],
+            buses: [//DATA FROM SERVER
+                { regNo: "KDA648R" },
+                { regNo: "KCB647R" },
+                { regNo: "KCM648R" },
+                { regNo: "KCN648S" },
+                { regNo: "KCM648R" },
+                { regNo: "KCM648R" }
+            ],
+            recievedTransactions: [
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
+                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
             ]
+
         }
         this.changeFragments = this.changeFragments.bind(this);
     }
@@ -38,11 +60,11 @@ export default class Home extends React.Component {
         if (item === 'trips') {
             renderingComponent = <Trips trips={trips} />;
         } else if (item === 'user') {
-            renderingComponent = <Account />
+            renderingComponent = <Account logu={this.props.logu} />
         } else if (item === 'transactions') {
-            renderingComponent = <Transactions />
+            renderingComponent = <Transactions data={this.state.recievedTransactions} />
         } else {
-            renderingComponent = <Settings />
+            renderingComponent = <Settings buses={this.state.buses} />
         }
 
         return (

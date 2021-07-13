@@ -27,7 +27,7 @@ export default class Account extends React.Component {
                         <Text style={styles.textBold}>Role:</Text>
                         <Text style={styles.text}>conductor</Text>
                     </View>
-                    <TouchableOpacity style={styles.logout}>
+                    <TouchableOpacity style={styles.logout} onPress={this.props.logu}>
                         <Text>Logout</Text>
                     </TouchableOpacity>
 

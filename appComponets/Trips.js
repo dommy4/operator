@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { View, TouchableOpacity, ScrollView } from 'react-native'
 import Tripholder from './Tripholder'
 import Updater from './Updater'
-import { Icon } from 'react-native-elements/dist/icons/Icon'
+
 export default class Trips extends React.Component {
     constructor(props) {
         super(props)
@@ -65,9 +65,7 @@ const styles = StyleSheet.create({
     },
     headtext: {
         fontWeight: "bold",
-        fontSize: 20,
-        color: "#0455bf",
-
+        fontSize: 20
     },
     text: {
         fontWeight: "bold",

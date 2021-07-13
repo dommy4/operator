@@ -10,7 +10,9 @@ export default class Updater extends React.Component {
             fare: 0,
             from: '',
             to: '',
-            busRegNo: this.props.bus
+            busRegNo: this.props.bus,
+            routes: ["TOWN", "ESTATE", "JOGOORD"]//FROM SERVER
+
         }
         this.changeHandler = this.changeHandler.bind(this);
         this.handleSelectFrom = this.handleSelectFrom.bind(this);
@@ -29,7 +31,14 @@ export default class Updater extends React.Component {
     saveChanges() {
         const { fare, to, from } = this.state;
         if (fare !== 0 && to !== '' && from !== '') {
-            axios.post(`http://192.168.137.5:5000/fareupdate`, this.state)
+            axios.post(`http://192.168.137.5:5000/fareupdate`,
+                {
+                    fare: 0,
+                    from: '',
+                    to: '',
+                    busRegNo: this.props.bus
+                }
+            )
                 .then((res) => {
                     Alert.alert('RESPONSE', res.data);
                 })
@@ -51,8 +60,7 @@ export default class Updater extends React.Component {
                         selectedValue={this.state.from}
                         onValueChange={this.handleSelectFrom}
                         mode="dropdown">
-                        <Picker.Item label="TOWN" value="TOWN" />
-                        <Picker.Item label="ESTATE" value="ESTATE" />
+                        {this.state.routes.map((r, i) => (<Picker.Item key={i} label={r} value={r} />))}
                     </Picker>
                 </View>
                 <View style={styles.picker}>
@@ -61,8 +69,7 @@ export default class Updater extends React.Component {
                         selectedValue={this.state.to}
                         onValueChange={this.handleSelectTo}
                         mode="dropdown">
-                        <Picker.Item label="TOWN" value="TOWN" />
-                        <Picker.Item label="ESTATE" value="ESTATE" />
+                        {this.state.routes.map((r, i) => (<Picker.Item key={i} label={r} value={r} />))}
                     </Picker>
                 </View>
                 <TextInput onChangeText={this.changeHandler('fare')} style={styles.input} keyboardType="numeric" placeholder="Fare amount" />

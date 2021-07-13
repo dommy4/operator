@@ -11,15 +11,19 @@ class App extends React.Component {
       isAllowed: false
     }
     this.setAllowed = this.setAllowed.bind(this);
+    this.revokeUser=this.revokeUser.bind(this);
   }
   setAllowed() {
     this.setState({ isAllowed: true })
+  } 
+  revokeUser() {
+    this.setState({ isAllowed: false })
   }
   render() {
     return (
       <View style={{ flex: 1 }}>
         {(this.state.isAllowed ?
-          <Home />
+          <Home logu={this.revokeUser} />
           :
           <Login setAllowed={this.setAllowed} />
         )}
