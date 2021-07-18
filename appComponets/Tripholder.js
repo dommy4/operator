@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import getHost from './Host';
 
 export default class Tripholder extends React.Component {
     constructor(props) {
@@ -16,7 +18,14 @@ export default class Tripholder extends React.Component {
         this.toggleBanner = this.toggleBanner.bind(this);
     }
     endTrip() {
-        this.setState({ active: false })
+        axios.get(`${getHost()}/endtrip/${this.state.id}`)
+            .then((res) => {
+                alert(res.data);
+                this.setState({ active: false })
+            })
+            .catch((err) => {
+                alert(err.message);
+            })
     }
     toggleBanner() {
         (this.state.showBanner ?
@@ -120,6 +129,6 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        
+
     }
 })

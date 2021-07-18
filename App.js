@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import { Text, View } from 'react-native'
 import Account from './appComponets/Account';
@@ -8,7 +9,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isAllowed: false
+      isAllowed: false,//should be in a redux store
     }
     this.setAllowed = this.setAllowed.bind(this);
     this.revokeUser=this.revokeUser.bind(this);

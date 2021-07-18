@@ -10,13 +10,16 @@ export default class Trips extends React.Component {
         super(props)
         this.state = {
             new: false,
+            bus: 'KCM648R'
         }
         this.newTrip = this.newTrip.bind(this);
         this.showTrips = this.showTrips.bind(this);
     }
+    
     newTrip() {
-        this.setState({ new: true })
+        this.setState({ new: true })//displays form for new trip
     }
+
     showTrips() {
         this.setState({ new: false })
     }
@@ -27,7 +30,7 @@ export default class Trips extends React.Component {
                 {this.state.new ?
                     <>
                         <Text style={styles.headtext}>New Trip</Text>
-                        <Updater bus='' showTrips={this.showTrips} />
+                        <Updater bus={this.state.bus} showTrips={this.showTrips} />
                     </>
                     :
                     <>

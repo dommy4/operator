@@ -5,54 +5,54 @@ import Transactions from './Transactions'
 import Settings from './Settings'
 import Account from './Account'
 import Trips from './Trips'
+import axios from 'axios'
+import getHost from './Host'
 
 export default class Home extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            accountID: 245,
+            selectedBus: 'KCM648R',
+            user:{},
             item: 'trips',
-            trips: [
-                { id: 101, from: 'ESTATE', to: 'ESTATE', fare: 20, active: true },
-                { id: 101, from: 'TOWN', to: 'ESTATE', fare: 80, active: false },
-                { id: 101, from: 'ESTATE', to: 'ESTATE', fare: 20, active: false },
-                { id: 101, from: 'TOWN', to: 'ESTATE', fare: 80, active: false },
-                { id: 101, from: 'ESTATE', to: 'ESTATE', fare: 20, active: false },
-                { id: 101, from: 'TOWN', to: 'ESTATE', fare: 80, active: false },
-                { id: 101, from: 'ESTATE', to: 'ESTATE', fare: 20, active: false },
-                { id: 101, from: 'TOWN', to: 'ESTATE', fare: 80, active: false },
-                { id: 101, from: 'ESTATE', to: 'ESTATE', fare: 20, active: false },
-                { id: 101, from: 'TOWN', to: 'ESTATE', fare: 80, active: false },
-                { id: 101, from: 'TOWN', to: 'ESTATE', fare: 80, active: false },
-                { id: 101, from: 'TOWN', to: 'ESTATE', fare: 20, active: false }
-            ],
-            buses: [//DATA FROM SERVER
-                { regNo: "KDA648R" },
-                { regNo: "KCB647R" },
-                { regNo: "KCM648R" },
-                { regNo: "KCN648S" },
-                { regNo: "KCM648R" },
-                { regNo: "KCM648R" }
-            ],
-            recievedTransactions: [
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-                { id:'PG742P1HVI',name: "washington", seat: 12, amount: 80},
-            ]
+            trips: [],
+            recievedTransactions: []
 
         }
         this.changeFragments = this.changeFragments.bind(this);
+        this.getTransactions = this.getTransactions.bind(this);
+        this.getTrips = this.getTrips.bind(this);
     }
+    //gets all data on mount
+    componentDidMount() {
+        this.getTrips();
+        this.getTransactions();
+    }
+    getTrips() {
+        axios.get(`${getHost()}/trips`)
+            .then((res) => {
+                this.setState({ trips: res.data })
+            })
+            .catch((err) => {
+                alert(err.message);
+            })
+    }
+    getTransactions() {
+        axios.get(`${getHost()}/transactions`)
+            .then((res) => {
+                this.setState({ recievedTransactions: res.data })
+            })
+            .catch((err) => {
+                alert(err.message);
+            })
+    }
+
     changeFragments(component) {
         this.setState({ item: component });
     }
+
+
     render() {
         const { item, trips } = this.state;
         let renderingComponent = '';
@@ -64,7 +64,7 @@ export default class Home extends React.Component {
         } else if (item === 'transactions') {
             renderingComponent = <Transactions data={this.state.recievedTransactions} />
         } else {
-            renderingComponent = <Settings buses={this.state.buses} />
+            renderingComponent = <Settings/>
         }
 
         return (

@@ -2,6 +2,7 @@ import React from 'react'
 import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import axios from 'axios';
+import getHost from './Host';
 
 export default class Updater extends React.Component {
     constructor(props) {
@@ -11,36 +12,49 @@ export default class Updater extends React.Component {
             from: '',
             to: '',
             busRegNo: this.props.bus,
-            routes: ["TOWN", "ESTATE", "JOGOORD"]//FROM SERVER
+            routes: []//FROM SERVER
 
         }
         this.changeHandler = this.changeHandler.bind(this);
         this.handleSelectFrom = this.handleSelectFrom.bind(this);
         this.handleSelectTo = this.handleSelectTo.bind(this);
+        this.saveChanges = this.saveChanges.bind(this);
+    }
+    componentDidMount() {
+        axios.get(`${getHost()}/plyroutes`)
+            .then((res) => {
+                this.setState({ routes: res.data })
+            })
+            .catch((err) => {
+                alert(err.message)
+            })
     }
     changeHandler(name) {
         return (text) => this.setState({ [name]: text })
     }
+
     handleSelectFrom(selectedValue) {
         this.setState({ from: selectedValue })
     }
+
     handleSelectTo(selectedValue) {
         this.setState({ to: selectedValue })
     }
 
     saveChanges() {
-        const { fare, to, from } = this.state;
+        const { fare, to, from, busRegNo } = this.state;
         if (fare !== 0 && to !== '' && from !== '') {
-            axios.post(`http://192.168.137.5:5000/fareupdate`,
+            axios.post(`${getHost()}/newtrip`,
                 {
-                    fare: 0,
-                    from: '',
-                    to: '',
-                    busRegNo: this.props.bus
+                    fare: fare,
+                    from: from,
+                    to: to,
+                    busRegNo: busRegNo
                 }
             )
                 .then((res) => {
                     Alert.alert('RESPONSE', res.data);
+                    this.setState({ fare: '', to: '' });
                 })
                 .catch((err) => {
                     Alert.alert('ERROR', err.message);
@@ -73,8 +87,11 @@ export default class Updater extends React.Component {
                     </Picker>
                 </View>
                 <TextInput onChangeText={this.changeHandler('fare')} style={styles.input} keyboardType="numeric" placeholder="Fare amount" />
-                <TouchableOpacity style={styles.save} onPress={this.props.showTrips}>
+                <TouchableOpacity style={styles.save} onPress={this.saveChanges}>
                     <Text style={styles.saveText}>save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.back} onPress={this.props.showTrips}>
+                    <Text style={styles.backText}>back</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -122,6 +139,23 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding: 10,
         fontWeight: "bold"
+    },
+    back: {
+        width: "90%",
+        padding: 10,
+        alignItems: "center",
+        backgroundColor: "white",
+        borderWidth: 2,
+        borderColor: "#0866e0",
+        marginTop: 20,
+        borderRadius: 5
+    },
+    backText: {
+        fontSize: 20,
+        color: "#0866e0",
+        fontWeight: "bold"
     }
+
+
 
 })

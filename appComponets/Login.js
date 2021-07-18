@@ -1,8 +1,10 @@
+import axios from 'axios'
 import React from 'react'
 import {
     View, StyleSheet, Text, TextInput, TouchableOpacity, ImageBackground
 } from 'react-native'
 import CheckBox from 'react-native-check-box'
+import getHost from './Host'
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -14,10 +16,22 @@ export default class Login extends React.Component {
             errMessage: ""
         }
         this.showPassword = this.showPassword.bind(this);
-        this.changHandler=this.changHandler.bind(this);
+        this.changHandler = this.changHandler.bind(this);
+        this.verifyUser = this.verifyUser.bind(this);
     }
-    changHandler(name){
-        return (text)=>this.setState({[name]:text});
+    changHandler(name) {
+        return (text) => this.setState({ [name]: text });
+    }
+    verifyUser() {
+        axios.post(`${getHost()}/verifyuser`, { user: this.state.user, ukey: this.state.ukey })
+            .then((res) => {
+                alert(res.data);
+                //should update the redux store //to work on it yet
+                this.props.setAllowed();
+            })
+            .catch((err) => {
+                alert(err.message);
+            })
     }
     showPassword() {
         (this.state.isChecked ?
@@ -53,7 +67,7 @@ export default class Login extends React.Component {
                     </View>
 
                     <View style={styles.buttonWrapper}>
-                        <TouchableOpacity style={styles.button} onPress={this.props.setAllowed}><Text style={styles.buttonText}>LOGIN</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={this.verifyUser}><Text style={styles.buttonText}>LOGIN</Text></TouchableOpacity>
                     </View>
                 </View>
             </ImageBackground>
@@ -67,7 +81,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        paddingTop:100
+        paddingTop: 100
     },
     container: {
         marginTop: 50,
