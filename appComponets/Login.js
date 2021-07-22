@@ -23,11 +23,10 @@ export default class Login extends React.Component {
         return (text) => this.setState({ [name]: text });
     }
     verifyUser() {
+        const{user,ukey}=this.state;
         axios.post(`${getHost()}/verifyuser`, { user: this.state.user, ukey: this.state.ukey })
             .then((res) => {
-                alert(res.data);
-                //should update the redux store //to work on it yet
-                this.props.setAllowed();
+                this.props.setAllowed(user,ukey,res.data.allowed);
             })
             .catch((err) => {
                 alert(err.message);
@@ -47,7 +46,7 @@ export default class Login extends React.Component {
                 <View style={styles.container} >
                     <Text style={styles.topText}>MattApp</Text>
                     <View style={styles.inputWrapper}>
-                        <TextInput style={styles.input} onChangeText={this.changHandler('user')} placeholder='phone' keyboardType="numeric" />
+                        <TextInput style={styles.input} onChangeText={this.changHandler('user')} placeholder='username' keyboardType="default" />
                         <TextInput style={styles.input} onChangeText={this.changHandler('ukey')} secureTextEntry={!isChecked} placeholder='password' />
                     </View>
 

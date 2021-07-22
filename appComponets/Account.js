@@ -1,9 +1,31 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 import { StyleSheet, View, Text } from 'react-native';
 import { Icon } from 'react-native-elements'
 
 export default class Account extends React.Component {
+    _isMounted = false;
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            user: ''
+        }
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+        AsyncStorage.getItem('@user')
+            .then((v) => {
+                this.setState({ user: v });
+            })
+            .catch((err) => { Alert.alert(err) })
+    }
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     render() {
         return (
             <View style={styles.account}>
@@ -13,7 +35,7 @@ export default class Account extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.row}>
                         <Text style={styles.textBold}>Name:</Text>
-                        <Text style={styles.text}>WASHINGTON OMONDI</Text>
+                        <Text style={styles.text}>{this.state.user}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.textBold}>Bus:</Text>
@@ -55,8 +77,8 @@ const styles = StyleSheet.create({
         width: "90%",
         borderRadius: 5,
         elevation: 5,
-        alignItems:"center",
-        padding:5
+        alignItems: "center",
+        padding: 5
 
     },
     row: {
@@ -73,11 +95,11 @@ const styles = StyleSheet.create({
         width: "65%",
         padding: 10
     },
-    logout:{
-        backgroundColor:"#ff4c56",
-        width:"90%",
-        padding:10,
-        alignItems:"center",
-        borderRadius:5
+    logout: {
+        backgroundColor: "#ff4c56",
+        width: "90%",
+        padding: 10,
+        alignItems: "center",
+        borderRadius: 5
     }
 })

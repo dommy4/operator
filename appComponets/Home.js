@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, TouchableOpacity, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, TouchableOpacity, Text, View, ScrollView, Alert } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Transactions from './Transactions'
 import Settings from './Settings'
@@ -7,14 +7,15 @@ import Account from './Account'
 import Trips from './Trips'
 import axios from 'axios'
 import getHost from './Host'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default class Home extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            accountID: 245,
+            accountID: '',
             selectedBus: 'KCM648R',
-            user:{},
+            user: {},
             item: 'trips',
             trips: [],
             recievedTransactions: []
@@ -26,11 +27,35 @@ export default class Home extends React.Component {
     }
     //gets all data on mount
     componentDidMount() {
+        this.getAccount();
         this.getTrips();
         this.getTransactions();
     }
+
+    getAccount = async () => {
+        try {
+            let acc = await AsyncStorage.getItem('@account')
+            acc != null ? JSON.parse(acc) : acc = 'No account found';
+            this.setState({ accountID: acc });
+        } catch (error) {
+            alert(error);
+        }
+    }
+
+    RegisteredBus = async () => {
+        try {
+            let bus = await AsyncStorage.getItem('@bus');
+            bus != null ? JSON.parse(bus) : bus = 'No bus registered';
+            this.setState({ selectedBus: bus });
+        } catch (error) {
+            alert(error);
+        }
+    }
+
+
+
     getTrips() {
-        axios.get(`${getHost()}/trips`)
+        axios.get(`${getHost()}/trips/today`)
             .then((res) => {
                 this.setState({ trips: res.data })
             })
@@ -38,6 +63,7 @@ export default class Home extends React.Component {
                 alert(err.message);
             })
     }
+
     getTransactions() {
         axios.get(`${getHost()}/transactions`)
             .then((res) => {
@@ -58,13 +84,13 @@ export default class Home extends React.Component {
         let renderingComponent = '';
 
         if (item === 'trips') {
-            renderingComponent = <Trips trips={trips} />;
+            renderingComponent = <Trips accountID={this.state.accountID} trips={trips} />;
         } else if (item === 'user') {
             renderingComponent = <Account logu={this.props.logu} />
         } else if (item === 'transactions') {
-            renderingComponent = <Transactions data={this.state.recievedTransactions} />
+            renderingComponent = <Transactions accountID={this.state.accountID} data={this.state.recievedTransactions} />
         } else {
-            renderingComponent = <Settings/>
+            renderingComponent = <Settings accountID={this.state.accountID} />
         }
 
         return (

@@ -9,6 +9,7 @@ export default class Trips extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            accountID:this.props.accountID,
             new: false,
             bus: 'KCM648R'
         }
@@ -30,7 +31,7 @@ export default class Trips extends React.Component {
                 {this.state.new ?
                     <>
                         <Text style={styles.headtext}>New Trip</Text>
-                        <Updater bus={this.state.bus} showTrips={this.showTrips} />
+                        <Updater accountID={this.state.accountID} bus={this.state.bus} showTrips={this.showTrips} />
                     </>
                     :
                     <>

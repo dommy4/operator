@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef } from 'react'
 import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import axios from 'axios';
@@ -8,20 +8,21 @@ export default class Updater extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            accountID:this.props.accountID,
             fare: 0,
             from: '',
             to: '',
             busRegNo: this.props.bus,
             routes: []//FROM SERVER
-
         }
+        this.textInputRef=React.createRef()
         this.changeHandler = this.changeHandler.bind(this);
         this.handleSelectFrom = this.handleSelectFrom.bind(this);
         this.handleSelectTo = this.handleSelectTo.bind(this);
         this.saveChanges = this.saveChanges.bind(this);
     }
     componentDidMount() {
-        axios.get(`${getHost()}/plyroutes`)
+        axios.get(`${getHost()}/${this.state.accountID}/plyroutes`)
             .then((res) => {
                 this.setState({ routes: res.data })
             })
@@ -53,8 +54,8 @@ export default class Updater extends React.Component {
                 }
             )
                 .then((res) => {
+                    this.textInputRef.current.clear();
                     Alert.alert('RESPONSE', res.data);
-                    this.setState({ fare: '', to: '' });
                 })
                 .catch((err) => {
                     Alert.alert('ERROR', err.message);
@@ -86,7 +87,7 @@ export default class Updater extends React.Component {
                         {this.state.routes.map((r, i) => (<Picker.Item key={i} label={r} value={r} />))}
                     </Picker>
                 </View>
-                <TextInput onChangeText={this.changeHandler('fare')} style={styles.input} keyboardType="numeric" placeholder="Fare amount" />
+                <TextInput onChangeText={this.changeHandler('fare')} ref={ this.textInputRef} style={styles.input} keyboardType="numeric" placeholder="Fare amount" />
                 <TouchableOpacity style={styles.save} onPress={this.saveChanges}>
                     <Text style={styles.saveText}>save</Text>
                 </TouchableOpacity>

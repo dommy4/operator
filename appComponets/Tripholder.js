@@ -20,7 +20,6 @@ export default class Tripholder extends React.Component {
     endTrip() {
         axios.get(`${getHost()}/endtrip/${this.state.id}`)
             .then((res) => {
-                alert(res.data);
                 this.setState({ active: false })
             })
             .catch((err) => {
