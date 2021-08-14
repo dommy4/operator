@@ -1,5 +1,5 @@
 function getHost() {
-    let Str = "http://192.168.137.5:5000";
+    let Str = "http://192.168.43.75:5000";
     return Str;
 }
 

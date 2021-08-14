@@ -13,8 +13,8 @@ export default class Home extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            accountID: '',
-            selectedBus: 'KCM648R',
+            accountID: this.props.accountID,
+            selectedBus: this.props.selectedBus,
             user: {},
             item: 'trips',
             trips: [],
@@ -27,45 +27,26 @@ export default class Home extends React.Component {
     }
     //gets all data on mount
     componentDidMount() {
-        this.getAccount();
         this.getTrips();
         this.getTransactions();
     }
 
-    getAccount = async () => {
-        try {
-            let acc = await AsyncStorage.getItem('@account')
-            acc != null ? JSON.parse(acc) : acc = 'No account found';
-            this.setState({ accountID: acc });
-        } catch (error) {
-            alert(error);
-        }
-    }
-
-    RegisteredBus = async () => {
-        try {
-            let bus = await AsyncStorage.getItem('@bus');
-            bus != null ? JSON.parse(bus) : bus = 'No bus registered';
-            this.setState({ selectedBus: bus });
-        } catch (error) {
-            alert(error);
-        }
-    }
-
-
-
     getTrips() {
-        axios.get(`${getHost()}/trips/today`)
-            .then((res) => {
-                this.setState({ trips: res.data })
-            })
-            .catch((err) => {
-                alert(err.message);
-            })
+        if (this.state.accountID === 'NoBus' || this.state.selectedBus === 'NoAccount' || this.state.accountID === '' || this.state.selectedBus === '') {
+            Alert.alert("ERROR","No account")
+        } else {
+            axios.get(`${getHost()}/trips/all/${this.state.accountID}/${this.state.selectedBus}`)
+                .then((res) => {
+                    this.setState({ trips: res.data })
+                })
+                .catch((err) => {
+                    Alert.alert(err.message);
+                })
+        }
     }
 
     getTransactions() {
-        axios.get(`${getHost()}/transactions`)
+        axios.get(`${getHost()}/transactions/${this.state.accountID}/${this.state.selectedBus}`)
             .then((res) => {
                 this.setState({ recievedTransactions: res.data })
             })
@@ -84,7 +65,7 @@ export default class Home extends React.Component {
         let renderingComponent = '';
 
         if (item === 'trips') {
-            renderingComponent = <Trips accountID={this.state.accountID} trips={trips} />;
+            renderingComponent = <Trips bus={this.state.selectedBus} accountID={this.state.accountID} trips={trips} getTrips={this.getTrips} />;
         } else if (item === 'user') {
             renderingComponent = <Account logu={this.props.logu} />
         } else if (item === 'transactions') {
@@ -95,6 +76,9 @@ export default class Home extends React.Component {
 
         return (
             <View style={styles.home}>
+                <View style={styles.info}>
+                    <Text>AccountId: {this.state.accountID}</Text><Text>BusId: {this.state.selectedBus}</Text>
+                </View>
                 {/* rendering component */}
                 {renderingComponent}
                 {/* navigation */}
@@ -121,11 +105,17 @@ export default class Home extends React.Component {
     }
 }
 const styles = StyleSheet.create({
+    info: {
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        padding: 10,
+        width: "100%"
+    },
     home: {
         flex: 1,
         alignItems: "center",
         width: "100%",
-        paddingTop: 50
+        paddingTop: 30
     },
     bottom: {
         width: "100%",

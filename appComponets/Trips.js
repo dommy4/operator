@@ -9,20 +9,25 @@ export default class Trips extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            accountID:this.props.accountID,
+            accountID: this.props.accountID,
             new: false,
-            bus: 'KCM648R'
+            bus: this.props.bus
         }
         this.newTrip = this.newTrip.bind(this);
         this.showTrips = this.showTrips.bind(this);
     }
-    
+    componentDidMount() {
+        this.props.getTrips();
+    }
+
     newTrip() {
         this.setState({ new: true })//displays form for new trip
     }
 
     showTrips() {
-        this.setState({ new: false })
+        this.setState({ new: false }, () => {
+            this.props.getTrips();
+        })
     }
 
     render() {
@@ -39,7 +44,7 @@ export default class Trips extends React.Component {
                             <Text style={styles.text}>New</Text>
                         </TouchableOpacity>
                         <ScrollView contentContainerStyle={styles.scroll}>
-                            {this.props.trips.map((trip, index) => (<Tripholder key={index} id={trip.id} from={trip.from} to={trip.to} fare={trip.fare} active={trip.active} />))}
+                            {this.props.trips.map((trip, index) => (<Tripholder key={index} action={this.showTrips} id={trip.id} accountId={trip.accountId} selectedBus={trip.busId} from={trip.tripFrom} to={trip.tripTo} fare={trip.fare} active={trip.tripStatus} />))}
                         </ScrollView>
                     </>
 
@@ -49,13 +54,13 @@ export default class Trips extends React.Component {
     }
 }
 const styles = StyleSheet.create({
-    add:{
-        marginRight:20
+    add: {
+        marginRight: 20
     },
     trips: {
         flex: 1,
         alignItems: "center",
-        width:"100%"
+        width: "100%"
     },
     new: {
         width: "90%",
@@ -64,8 +69,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#0866e0",
         padding: 15,
         marginBottom: 10,
-        flexDirection:"row",
-        justifyContent:"center"
+        flexDirection: "row",
+        justifyContent: "center"
     },
     headtext: {
         fontWeight: "bold",

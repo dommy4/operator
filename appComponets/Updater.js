@@ -8,14 +8,14 @@ export default class Updater extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            accountID:this.props.accountID,
+            accountId: this.props.accountID,
             fare: 0,
             from: '',
             to: '',
-            busRegNo: this.props.bus,
+            busId: this.props.bus,
             routes: []//FROM SERVER
         }
-        this.textInputRef=React.createRef()
+        this.textInputRef = React.createRef()
         this.changeHandler = this.changeHandler.bind(this);
         this.handleSelectFrom = this.handleSelectFrom.bind(this);
         this.handleSelectTo = this.handleSelectTo.bind(this);
@@ -43,14 +43,16 @@ export default class Updater extends React.Component {
     }
 
     saveChanges() {
-        const { fare, to, from, busRegNo } = this.state;
+        const { accountId, fare, to, from, busId } = this.state;
         if (fare !== 0 && to !== '' && from !== '') {
             axios.post(`${getHost()}/newtrip`,
                 {
+                    accountId: accountId,
                     fare: fare,
                     from: from,
                     to: to,
-                    busRegNo: busRegNo
+                    busId: busId,
+                    status: 1
                 }
             )
                 .then((res) => {
@@ -87,7 +89,7 @@ export default class Updater extends React.Component {
                         {this.state.routes.map((r, i) => (<Picker.Item key={i} label={r} value={r} />))}
                     </Picker>
                 </View>
-                <TextInput onChangeText={this.changeHandler('fare')} ref={ this.textInputRef} style={styles.input} keyboardType="numeric" placeholder="Fare amount" />
+                <TextInput onChangeText={this.changeHandler('fare')} ref={this.textInputRef} style={styles.input} keyboardType="numeric" placeholder="Fare amount" />
                 <TouchableOpacity style={styles.save} onPress={this.saveChanges}>
                     <Text style={styles.saveText}>save</Text>
                 </TouchableOpacity>

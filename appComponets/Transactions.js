@@ -9,7 +9,7 @@ export default class Transactions extends React.Component {
             <>
                 <Text style={styles.headText}>Transactions</Text>
                 <ScrollView>
-                    {this.props.data.map((t, i) => (<Wrapper key={i} id={t.id} name={t.name} seat={t.seat} amount={t.amount} ttime={t.ttime} />))}
+                    {this.props.data.map((t, i) => (<Wrapper key={i} id={t.mpesaReceiptNumber} name={t.phone} amount={t.amount} ttime={t.transactionDate} />))}
                 </ScrollView>
             </>
         )
@@ -18,7 +18,7 @@ export default class Transactions extends React.Component {
 }
 
 const Wrapper = (props) => {
-    const { id, name, seat, amount, ttime } = props;
+    const { id, name, amount, ttime } = props;
     return (
         <View style={styles.transactions}>
             <TouchableOpacity style={styles.bar}>
@@ -31,12 +31,12 @@ const Wrapper = (props) => {
                     <Text style={styles.text}>{name}</Text>
                 </View>
                 <View style={styles.textHolders2}>
-                    <Text style={styles.text1}>Seat</Text>
+                    <Text style={styles.text1}>Amount</Text>
                     <Text style={styles.text}>{amount}</Text>
                 </View>
                 <View style={styles.textHolders2}>
-                    <Text style={styles.text1}>Amount</Text>
-                    <Text style={styles.text}>{amount}</Text>
+                    <Text style={styles.text1}>Date</Text>
+                    <Text style={styles.text}>{ttime}</Text>
                 </View>
             </TouchableOpacity>
         </View>

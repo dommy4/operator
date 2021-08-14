@@ -66,7 +66,7 @@ export default class Settings extends React.Component {
     //stores data locally
     registerBus = async () => {
         try {
-            await AsyncStorage.setItem('@bus', this.state.registeredBus);
+            await AsyncStorage.setItem('@bus', JSON.stringify(this.state.registeredBus));
         } catch (error) {
             alert("Unable to save BUS")
         }
@@ -126,7 +126,7 @@ export default class Settings extends React.Component {
                         selectedValue={this.state.registeredBus}
                         onValueChange={this.handleSelectBus}
                         mode="dropdown">
-                        {this.state.buses.map((bus, index) => (<Picker.Item key={index} label={bus.regNo} value={bus.regNo} />))}
+                        {this.state.buses.map((bus, index) => (<Picker.Item key={index} label={bus.regNo} value={bus.id} />))}
                     </Picker>
                 </View>
                 <View style={styles.registeredBus}>

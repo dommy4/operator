@@ -8,6 +8,8 @@ export default class Tripholder extends React.Component {
         super(props)
         this.state = {
             id: this.props.id,
+            accountId: this.props.accountId,
+            selectedBus: this.props.selectedBus,
             from: this.props.from,
             to: this.props.to,
             fare: this.props.fare,
@@ -18,9 +20,9 @@ export default class Tripholder extends React.Component {
         this.toggleBanner = this.toggleBanner.bind(this);
     }
     endTrip() {
-        axios.get(`${getHost()}/endtrip/${this.state.id}`)
+        axios.get(`${getHost()}/endtrip/${this.state.accountId}/${this.state.selectedBus}/${this.state.id}`)
             .then((res) => {
-                this.setState({ active: false })
+                this.setState({ active: false }, () => { this.props.action() })
             })
             .catch((err) => {
                 alert(err.message);

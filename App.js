@@ -12,6 +12,8 @@ class App extends React.Component {
       user: '',
       ukey: '',
       isAllowed: false,//should be in a redux store
+      accountID: '',
+      selectedBus: ''
     }
     this.setAllowed = this.setAllowed.bind(this);
     this.revokeUser = this.revokeUser.bind(this);
@@ -20,7 +22,30 @@ class App extends React.Component {
 
   componentDidMount() {
     this.getSetData();
+    this.getAccount();
+    this.RegisteredBus();
   }
+  
+  getAccount = async () => {
+    try {
+      let acc = await AsyncStorage.getItem('@account')
+      acc != null ? JSON.parse(acc) : acc = 'NoAccount';
+      this.setState({ accountID: acc });
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  RegisteredBus = async () => {
+    try {
+      let bus = await AsyncStorage.getItem('@bus');
+      bus != null ? JSON.parse(bus) : bus = 'NoBus';
+      this.setState({ selectedBus: bus });
+    } catch (error) {
+      alert(error);
+    }
+  }
+
 
   setAllowed(user, ukey, action) {
     AsyncStorage.multiSet([['@user', user], ['@ukey', ukey]]);
@@ -28,6 +53,7 @@ class App extends React.Component {
   }
 
   revokeUser() {
+    AsyncStorage.multiRemove(['@user', '@ukey']);
     this.setState({ isAllowed: false })
   }
 
@@ -53,10 +79,10 @@ class App extends React.Component {
 
               });
             })
-            .catch((err) => { Alert.alert(err) })
+            .catch((err) => { Alert.alert("ERROR", err.message) })
         });
       })
-      .catch((err) => { Alert.alert(err) })
+      .catch((err) => { Alert.alert("ERROR", err.message) })
   }
 
 
@@ -64,7 +90,7 @@ class App extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         {(this.state.isAllowed ?
-          <Home logu={this.revokeUser} />
+          <Home logu={this.revokeUser} accountID={this.state.accountID} selectedBus={this.state.selectedBus} />
           :
           <Login setAllowed={this.setAllowed} />
         )}
